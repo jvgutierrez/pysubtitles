@@ -1,6 +1,6 @@
 from functools import wraps
 import json
-import os.path
+import os
 import time
 from datetime import (
     datetime,
@@ -11,6 +11,10 @@ from datetime import (
 def cached(f):
     @wraps(f)
     def wrapper(*args, **kwargs):
+        try:
+            os.mkdir(os.path.expanduser('~/.pysubtitles'))
+        except OSError:
+            pass
         cache_file = os.path.expanduser('~/.pysubtitles/{0}.{1}.json'.format(f.__module__, f.__name__))
         try:
             if (datetime.fromtimestamp(time.time()) - datetime.fromtimestamp(os.path.getmtime(cache_file))).days < 4:
