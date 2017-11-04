@@ -65,12 +65,12 @@ def main():
         sys.exit(1)
     if len(subtitles) > 0:
         input = None
-        while input != '-1':
+        while input != -1:
             try:
                 for i, subtitle in enumerate(subtitles):
                     print "{0}. {1}".format(i, subtitle['file'])
-                input = raw_input('--> ')
-                subtitle = provider.fetch_subtitle(subtitles[int(input)]['link'])
+                input = int(raw_input('--> '))
+                subtitle = provider.fetch_subtitle(subtitles[input]['link'])
                 persist_subtitle(subtitle, options['<episode>'])
                 sys.exit(0)
             except KeyboardInterrupt:
