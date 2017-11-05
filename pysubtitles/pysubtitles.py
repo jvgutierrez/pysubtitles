@@ -10,6 +10,7 @@ Options:
 """
 
 import codecs
+import difflib
 import importlib
 import logging
 import os
@@ -58,11 +59,13 @@ def main():
 
     show_list = provider.fetch_show_list()
 
-    if episode_data['show'].lower() in show_list:
-        subtitles = provider.list_subtitles(episode_data['show'], episode_data['season'], episode_data['episode'], options['--lang'])
-    else:
+    show_matches = difflib.get_close_matches(episode_data['show'].lower(), show_list, n=1)
+    if len(show_matches) == 0:
         log.error("Unable to find show %s in provider %s", episode_data['show'], options['--provider'])
         sys.exit(1)
+
+    subtitles = provider.list_subtitles(show_matches[0], episode_data['season'], episode_data['episode'], options['--lang'])
+
     if len(subtitles) > 0:
         input = None
         while input != -1:
