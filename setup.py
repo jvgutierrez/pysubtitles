@@ -1,9 +1,9 @@
-import os
+# pylint: disable=attribute-defined-outside-init
 import sys
-from setuptools import setup, find_packages
 
 from pip.req import parse_requirements
 from pip.download import PipSession
+from setuptools import setup, find_packages
 from setuptools.command.test import test as TestCommand
 
 
@@ -20,11 +20,13 @@ class PyTest(TestCommand):
         errno = pytest.main(self.pytest_args)
         sys.exit(errno)
 
+
 def read_requirements(filename='requirements.txt'):
     '''parses requirements from requirements.txt'''
     install_reqs = parse_requirements(filename, session=PipSession())
     reqs = [str(ir.req) for ir in install_reqs]
     return reqs
+
 
 setup(name='pysubtitles',
       version='0.1',
@@ -34,15 +36,9 @@ setup(name='pysubtitles',
                    'Operating System :: OS Independent',
                    'Programming Language :: Python :: 2',
                    'Programming Language :: Python :: 2.7',
-                   'Topic :: Multimedia',
-      ],
+                   'Topic :: Multimedia'],
       packages=find_packages(),
       install_requires=read_requirements(),
       tests_require=read_requirements('test_requirements.txt'),
-      entry_points={
-          'console_scripts': [
-            'pysubtitles = pysubtitles.pysubtitles:main',
-          ],
-      },
-      cmdclass={'test': PyTest},
-)
+      entry_points={'console_scripts': ['pysubtitles = pysubtitles.pysubtitles:main']},
+      cmdclass={'test': PyTest})
